@@ -214,6 +214,8 @@ const AYAR = {
   bildirimAdresi: "https://hook.eu1.make.com/ol4p2fifmd6crhx2i6udlxe6s5l832uq",
   // Umami ziyaretçi paneli (website ID). Boşsa yüklenmez.
   umamiKimlik: "",
+  // Instagram, TikTok, Google gibi şirketlerin bağlantı kontrol robotları için e-posta gönderilsin mi
+  robotlariBildir: false,
   hesaplar: {
     spotify: "https://open.spotify.com/artist/3hIlq9jAT2SYZZCNUpkia5",
     youtube: "https://www.youtube.com/@hasancaofficial",
@@ -315,7 +317,10 @@ const Ziyaret = (() => {
 
   /* IP adresine göre yaklaşık konum (şehir, ülke). IP saklanmaz, e-postaya yazılmaz.
      Ziyaretçi VPN kullanıyorsa VPN'in konumu görünür. */
-  let konumIp = "";
+  let konumIp = "", robot = !!navigator.webdriver;
+  /* Bağlantı kontrol robotları veri merkezlerinden gelir (Meta, ByteDance, Amazon, Google...).
+     Cloudflare / Akamai / Fastly bilerek yok: iPhone'larda iCloud Özel Geçiş gerçek kişileri onlardan geçirir. */
+  const ROBOT_KURUM = /facebook|meta platforms|bytedance|tiktok|amazon|aws|google llc|google cloud|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai connected cloud|oracle|alibaba|tencent|choopa|vultr|leaseweb|scaleway|contabo|datacamp|m247/i;
   const konumHazir = (async () => {
     if (ben || !AYAR.bildirimAdresi) return "";
     const zamanAsimi = (ms) => new Promise((r) => setTimeout(() => r(null), ms));
@@ -325,14 +330,15 @@ const Ziyaret = (() => {
     };
     const kaynaklar = [
       async () => { const d = await (await fetch("https://get.geojs.io/v1/ip/geo.json")).json();
-        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country }; },
+        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country, kurum: d.organization_name || d.organization }; },
       async () => { const d = await (await fetch("https://ipapi.co/json/")).json();
-        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country_name }; }
+        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country_name, kurum: d.org }; }
     ];
     for (const k of kaynaklar) {
       try {
         const d = await Promise.race([k(), zamanAsimi(2500)]);
         if (d && (d.kod || d.ulke)) {
+          if (d.kurum && ROBOT_KURUM.test(d.kurum)) robot = true;
           const parca = [d.sehir];
           const sade = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ı/g, "i");
           if (d.bolge && !(d.sehir && sade(d.bolge).includes(sade(d.sehir)))) parca.push(d.bolge);
@@ -358,6 +364,7 @@ const Ziyaret = (() => {
   const kacir = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   function gonder(veri) {
     if (ben || !AYAR.bildirimAdresi) return;
+    if (robot && !AYAR.robotlariBildir) return;
     veri.html = veri.metin.split("\n").map(kacir).join("<br>");
     const govde = new URLSearchParams(veri);
     try {
