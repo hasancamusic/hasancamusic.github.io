@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HasanCa — söylenemeyenlere ses olan şarkılar</title>
+<meta name="description" content="HasanCa'nın şarkıları. Her şarkının bir dakikasını burada dinle, devamı Spotify, YouTube Music ve YouTube'da.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HasanCa">
+<meta property="og:description" content="Söylenemeyenlere ses olan şarkılar. Bir dakikasını dinle, devamı Spotify ve YouTube'da.">
+<meta property="og:image" content="https://hasancamusic.github.io/medya/paylasim.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://hasancamusic.github.io/">
+<link rel="icon" type="image/png" href="medya/simge.png">
+<link rel="apple-touch-icon" href="medya/simge.png">
+<link rel="preload" href="medya/hasanca.jpg" as="image">
+<style>
+  @font-face { font-family: "Gloock"; font-weight: 400; font-display: swap;
+    src: url(fontlar/gloock-latin-400-normal.woff2) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Gloock"; font-weight: 400; font-display: swap;
+    src: url(fontlar/gloock-latin-ext-400-normal.woff2) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Figtree"; font-weight: 400; font-display: swap; src: url(fontlar/figtree-latin-400-normal.woff2) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Figtree"; font-weight: 400; font-display: swap; src: url(fontlar/figtree-latin-ext-400-normal.woff2) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Figtree"; font-weight: 600; font-display: swap; src: url(fontlar/figtree-latin-600-normal.woff2) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Figtree"; font-weight: 600; font-display: swap; src: url(fontlar/figtree-latin-ext-600-normal.woff2) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+  :root {
+    --gece: #000;          /* fotoğrafın zemini ile birebir */
+    --kagit: #EEE5D5;      /* yazı */
+    --is: #8E857A;         /* ikincil yazı */
+    --cizgi: #1E1B18;      /* ayraçlar */
+    --mum: #E8A35B;        /* tek vurgu: mum ışığı */
+    --yuz: "Gloock", "Times New Roman", serif;
+    --govde: "Figtree", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--gece); -webkit-text-size-adjust: 100%; }
+  body { background: var(--gece); color: var(--kagit); font: 400 16px/1.55 var(--govde); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--mum); outline-offset: 3px; border-radius: 4px; }
+  svg { display: block; }
+
+  /* ---------- Giriş: yarısı karanlıkta portre ---------- */
+  .giris { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+  .giris img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 18%; }
+  /* yüzün alt yarısı karanlığa karışır, isim o karanlıkta durur */
+  .giris::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 38%, rgba(0,0,0,.78) 62%, #000 84%); }
+  .giris-icerik { position: relative; z-index: 1; width: 100%; max-width: 1080px; margin: 0 auto;
+    padding: 0 24px calc(40px + env(safe-area-inset-bottom)); }
+  .ad { font: 400 clamp(64px, 19vw, 168px)/0.86 var(--yuz); letter-spacing: -0.02em; margin-left: -0.04em; }
+  .ad span { display: block; }
+  .soz { margin-top: 18px; max-width: 15em; font: 400 clamp(19px, 5vw, 26px)/1.3 var(--yuz); color: var(--kagit); opacity: .82; }
+  .eylem { margin-top: 30px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .basla { display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 24px 0 18px; border-radius: 26px;
+    background: var(--mum); color: #1a1006; font-weight: 600; font-size: 16px; }
+  .basla svg { width: 22px; height: 22px; }
+  .hesaplar { display: flex; gap: 6px; }
+  .hesaplar a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 22px; color: var(--kagit); opacity: .78; }
+  .hesaplar a:hover { opacity: 1; }
+  .hesaplar svg { width: 22px; height: 22px; }
+
+  /* ---------- Şarkı listesi ---------- */
+  .liste { max-width: 760px; margin: 0 auto; padding: 72px 24px 40px; }
+  .liste h2 { font: 400 clamp(34px, 8vw, 48px)/1.05 var(--yuz); }
+  .liste p.aciklama { margin-top: 10px; color: var(--is); max-width: 30em; }
+  ol { list-style: none; margin-top: 28px; border-top: 1px solid var(--cizgi); }
+  li { border-bottom: 1px solid var(--cizgi); }
+  .sarki { width: 100%; display: grid; grid-template-columns: 48px 1fr 32px; align-items: center; gap: 16px;
+    padding: 12px 0; text-align: left; position: relative; }
+  .sarki img { width: 48px; height: 64px; object-fit: cover; border-radius: 3px; background: #111; }
+  .sarki .baslik { font: 400 clamp(21px, 5.4vw, 26px)/1.15 var(--yuz); }
+  .sarki .ikon { width: 32px; height: 32px; display: grid; place-items: center; color: var(--is); }
+  .sarki .ikon svg { width: 18px; height: 18px; }
+  .sarki:hover .baslik { color: var(--mum); }
+  .sarki[aria-current="true"] .baslik, .sarki[aria-current="true"] .ikon { color: var(--mum); }
+  .sarki .izi { position: absolute; left: 64px; right: 0; bottom: -1px; height: 1px; background: var(--mum); transform-origin: left; transform: scaleX(0); }
+
+  footer { max-width: 760px; margin: 0 auto; padding: 32px 24px calc(48px + env(safe-area-inset-bottom));
+    display: flex; flex-wrap: wrap; gap: 8px 24px; color: var(--is); font-size: 14px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--kagit); }
+
+  /* ---------- Çalar: tek ekran, liste üstüne açılır ---------- */
+  .calar { position: fixed; inset: 0; z-index: 10; background: var(--gece); display: none; }
+  .calar.acik { display: block; animation: ac .38s cubic-bezier(.2,.8,.2,1); }
+  @keyframes ac { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .calar video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .calar .karart { position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 42%, rgba(0,0,0,.86) 72%, #000 100%); }
+  .calar-ust { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center;
+    padding: calc(10px + env(safe-area-inset-top)) 12px 0 20px; font: 400 20px/1 var(--yuz); }
+  .kapat { width: 48px; height: 48px; display: grid; place-items: center; }
+  .kapat svg { width: 26px; height: 26px; }
+  .calar-alt { position: absolute; left: 0; right: 0; bottom: 0; max-width: 560px; margin: 0 auto;
+    padding: 0 24px calc(28px + env(safe-area-inset-bottom)); }
+  .calar h3 { font: 400 clamp(36px, 10vw, 54px)/1 var(--yuz); }
+  .sure { margin-top: 18px; }
+  .cubuk { height: 3px; background: rgba(238,229,213,.22); border-radius: 2px; overflow: hidden; }
+  .cubuk i { display: block; height: 100%; width: 0; background: var(--mum); }
+  .zaman { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: var(--is); font-variant-numeric: tabular-nums; }
+  .denetim { margin-top: 14px; display: flex; justify-content: center; align-items: center; gap: 28px; }
+  .denetim button { width: 48px; height: 48px; display: grid; place-items: center; }
+  .denetim svg { width: 28px; height: 28px; }
+  .denetim .oynat { width: 68px; height: 68px; border-radius: 34px; background: var(--kagit); color: #000; }
+  .denetim .oynat svg { width: 30px; height: 30px; }
+  .devam { margin-top: 22px; }
+  .devam p { font-size: 14px; color: var(--is); }
+  .platformlar { margin-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .platformlar a { height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px;
+    text-decoration: none; font-size: 14px; font-weight: 600; background: rgba(238,229,213,.1); }
+  .platformlar a:hover { background: rgba(238,229,213,.18); }
+  .platformlar svg { width: 18px; height: 18px; flex: none; }
+  .platformlar .uzun { display: none; }
+  .calar.bitti .platformlar .kisa { display: none; }
+  .calar.bitti .platformlar .uzun { display: inline; }
+  /* Önizleme bitince: devam etme seçenekleri öne çıkar */
+  .calar.bitti .denetim { display: none; }
+  .calar.bitti .devam p { font: 400 26px/1.2 var(--yuz); color: var(--kagit); }
+  .calar.bitti .platformlar { grid-template-columns: 1fr; }
+  .calar.bitti .platformlar a { height: 54px; font-size: 16px; background: rgba(238,229,213,.13); }
+  .calar.bitti .platformlar a:first-child { background: var(--mum); color: #1a1006; }
+  .sonra { display: none; margin-top: 14px; width: 100%; height: 44px; font-size: 15px; color: var(--is); }
+  .calar.bitti .sonra { display: block; }
+
+  .calar.bitti .karart { background: rgba(0,0,0,.74); }
+  @media (min-width: 900px) {
+    .giris img { left: auto; width: min(100svh, 68vw); object-position: 50% 30%; }
+    .giris::after { background: linear-gradient(to bottom, rgba(0,0,0,0) 75%, #000 100%); }
+    .giris-icerik { padding-bottom: 14vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .calar.acik { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="giris">
+  <img src="medya/hasanca.jpg" alt="HasanCa'nın portresi, yüzünün yarısı karanlıkta" fetchpriority="high">
+  <div class="giris-icerik">
+    <h1 class="ad"><span>Hasan</span><span>Ca</span></h1>
+    <p class="soz">söylenemeyenlere ses olan şarkılar</p>
+    <div class="eylem">
+      <button class="basla" id="basla" type="button">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg>
+        Dinlemeye başla
+      </button>
+      <nav class="hesaplar" id="hesaplar" aria-label="HasanCa hesapları"></nav>
+    </div>
+  </div>
+</header>
+
+<main class="liste" id="sarkilar">
+  <h2>Şarkılar</h2>
+  <p class="aciklama">Her şarkının bir dakikası burada. Devamını Spotify, YouTube Music ya da YouTube'da dinleyebilirsin.</p>
+  <ol id="liste"></ol>
+</main>
+
+<footer>
+  <span>© 2026 HasanCa</span>
+  <a href="privacy-policy.html">Gizlilik</a>
+  <a href="terms.html">Hizmet şartları</a>
+</footer>
+
+<section class="calar" id="calar" role="dialog" aria-modal="true" aria-labelledby="calar-baslik" hidden>
+  <video id="tuval" muted loop playsinline preload="none" aria-hidden="true"></video>
+  <div class="karart"></div>
+  <div class="calar-ust">
+    <span>HasanCa</span>
+    <button class="kapat" id="kapat" type="button" aria-label="Kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="calar-alt">
+    <h3 id="calar-baslik"></h3>
+    <div class="sure">
+      <div class="cubuk"><i id="ilerleme"></i></div>
+      <div class="zaman"><span id="gecen">0:00</span><span id="toplam">1:00</span></div>
+    </div>
+    <div class="denetim">
+      <button id="onceki" type="button" aria-label="Önceki şarkı">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 6.2v11.6a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l9.2-5.8a.8.8 0 0 1 1.2.7z"/></svg>
+      </button>
+      <button class="oynat" id="oynat" type="button" aria-label="Duraklat"></button>
+      <button id="sonraki" type="button" aria-label="Sonraki şarkı">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 6.2v11.6a.8.8 0 0 0 1.2.7l9.2-5.8a.8.8 0 0 0 0-1.4L5.2 5.5A.8.8 0 0 0 4 6.2z"/></svg>
+      </button>
+    </div>
+    <div class="devam">
+      <p id="devam-yazi">Tamamını dinle</p>
+      <div class="platformlar" id="platformlar"></div>
+      <button class="sonra" id="sonra" type="button">Sonraki şarkıyı dinle</button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* =====================================================================
+   AYARLAR — değiştirmen gereken her şey burada
+   ===================================================================== */
+const AYAR = {
+  onizlemeSn: 60,              // her şarkıdan dinletilecek süre (saniye)
+  oneCikan: "gaddar",          // "Dinlemeye başla" ile açılan şarkı
+  // Ziyaret bildirimi (Make webhook adresi). Boşsa bildirim gönderilmez.
+  bildirimAdresi: "https://hook.eu1.make.com/ol4p2fifmd6crhx2i6udlxe6s5l832uq",
+  // Umami ziyaretçi paneli (website ID). Boşsa yüklenmez.
+  umamiKimlik: "",
+  hesaplar: {
+    spotify: "https://open.spotify.com/search/HasanCa",
+    youtube: "https://www.youtube.com/results?search_query=HasanCa",
+    youtubeMuzik: "https://music.youtube.com/search?q=HasanCa",
+    tiktok: "https://www.tiktok.com/@xhasanca",
+    instagram: ""
+  }
+};
+
+/* Şarkılar. Bir şarkının tam bağlantısı varsa spotify / youtube / youtubeMuzik alanına yaz;
+   yoksa o platformda "HasanCa + şarkı adı" araması açılır.
+   baslangic: önizlemenin şarkının kaçıncı saniyesinden başlayacağı. */
+const SARKILAR = [
+  { id: "aman-aman", ad: "Aman Aman" },
+  { id: "adini-kalbime-muhurledim", ad: "Adını Kalbime Mühürledim" },
+  { id: "affet", ad: "Affet" },
+  { id: "aklim-sende", ad: "Aklım Sende" },
+  { id: "ben-sensiz-yasayamam", ad: "Ben Sensiz Yaşayamam" },
+  { id: "beni-en-iyi-sen-kirdin", ad: "Beni En İyi Sen Kırdın" },
+  { id: "bir-yol-sec", ad: "Bir Yol Seç" },
+  { id: "daha-kotusu", ad: "Daha Kötüsü" },
+  { id: "dagittin-beni", ad: "Dağıttın Beni" },
+  { id: "deli-ettin", ad: "Deli Ettin" },
+  { id: "donme-ne-olur", ad: "Dönme Ne Olur" },
+  { id: "eyvah", ad: "Eyvah" },
+  { id: "ezberi-boz", ad: "Ezberi Boz" },
+  { id: "gaddar", ad: "Gaddar" },
+  { id: "hep-sana-cikiyor-tum-yollar", ad: "Hep Sana Çıkıyor Tüm Yollar" },
+  { id: "meger", ad: "Meğer" },
+  { id: "ne-var-ne-yok", ad: "Ne Var Ne Yok" },
+  { id: "nefes-nefese", ad: "Nefes Nefese" },
+  { id: "sana-golge-dusmesin", ad: "Sana Gölge Düşmesin" },
+  { id: "seni-icimden-nasil-sokeyim", ad: "Seni İçimden Nasıl Sökeyim" },
+  { id: "seni-seviyorum", ad: "Seni Seviyorum" },
+  { id: "sozun-kirigi-kaldi-bende", ad: "Sözün Kırığı Kaldı Bende" },
+  { id: "tut-elimi", ad: "Tut Elimi" },
+  { id: "uzak-dur", ad: "Uzak Dur" },
+  { id: "zaman", ad: "Zaman" }
+];
+
+/* ===================================================================== */
+const SIMGE = {
+  spotify: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.22c3.81-.87 7.08-.5 9.72 1.12.3.18.39.56.2.86zm1.23-2.73a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.17a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.57 11.24 1.33.37.22.48.7.25 1.07zm.1-2.85C14.7 8.9 9.38 8.73 6.3 9.66a.94.94 0 1 1-.54-1.8c3.53-1.07 9.4-.86 13.1 1.34a.94.94 0 0 1-.96 1.62z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9L15.5 12l-5.8 3.1z"/></svg>',
+  youtubeMuzik: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 15.6a5.6 5.6 0 1 1 0-11.2 5.6 5.6 0 0 1 0 11.2zm0-10.1a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM10.2 14.6V9.4L14.7 12l-4.5 2.6z"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 2h-3.4v13.4a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9.1a6.4 6.4 0 1 0 5.4 6.3V8.6a8.1 8.1 0 0 0 4.7 1.5V6.7a4.7 4.7 0 0 1-4.7-4.7z"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
+  oynat: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg>',
+  durdur: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
+};
+const PLATFORM_ADI = { spotify: "Spotify", youtube: "YouTube", youtubeMuzik: "YouTube Music", tiktok: "TikTok", instagram: "Instagram" };
+
+const $ = (s) => document.querySelector(s);
+const sureYaz = (sn) => { sn = Math.max(0, Math.floor(sn)); return Math.floor(sn / 60) + ":" + String(sn % 60).padStart(2, "0"); };
+const ara = (s) => encodeURIComponent("HasanCa " + s.ad);
+function sarkiBaglantisi(s, platform) {
+  if (s[platform]) return s[platform];
+  if (platform === "spotify") return "https://open.spotify.com/search/" + ara(s);
+  if (platform === "youtubeMuzik") return "https://music.youtube.com/search?q=" + ara(s);
+  return "https://www.youtube.com/results?search_query=" + ara(s);
+}
+
+/* ---------------- Ziyaret takibi ---------------- */
+const Ziyaret = (() => {
+  const ben = (() => {
+    const q = new URLSearchParams(location.search).get("ben");
+    try {
+      if (q === "1") localStorage.setItem("hasanca-ben", "1");
+      if (q === "0") localStorage.removeItem("hasanca-ben");
+      return localStorage.getItem("hasanca-ben") === "1";
+    } catch (e) { return false; }
+  })();
+  const giris = Date.now();
+  const dinlenen = {};          // şarkı adı → saniye
+  const gidilen = [];           // "Spotify (Gaddar)"
+  let ozetSayisi = 0, sonOzet = "";
+
+  let ziyaretNo = 1;
+  try { ziyaretNo = Number(localStorage.getItem("hasanca-ziyaret") || 0) + 1; localStorage.setItem("hasanca-ziyaret", ziyaretNo); } catch (e) {}
+
+  const params = new URLSearchParams(location.search);
+  const kaynak = (() => {
+    const utm = params.get("utm_source") || params.get("ref") || params.get("k");
+    const ADLAR = { tiktok: "TikTok", instagram: "Instagram", ig: "Instagram", youtube: "YouTube", yt: "YouTube",
+      spotify: "Spotify", whatsapp: "WhatsApp", facebook: "Facebook", fb: "Facebook" };
+    if (utm) return ADLAR[utm.toLowerCase()] || utm;
+    const r = document.referrer;
+    if (!r) return "Doğrudan / uygulama içi tarayıcı";
+    try { const h = new URL(r).hostname.replace(/^www\./, ""); return h === location.hostname ? "Site içi" : h; } catch (e) { return r; }
+  })();
+  const saatDilimi = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { return ""; } })();
+  const ULKE = { Istanbul: "Türkiye", Stockholm: "İsveç", Berlin: "Almanya", Vienna: "Avusturya", Amsterdam: "Hollanda",
+    Brussels: "Belçika", Paris: "Fransa", Zurich: "İsviçre", London: "Birleşik Krallık", Copenhagen: "Danimarka", Oslo: "Norveç",
+    Helsinki: "Finlandiya", Nicosia: "Kıbrıs", Famagusta: "Kıbrıs", Baku: "Azerbaycan", Sofia: "Bulgaristan", Athens: "Yunanistan",
+    Rome: "İtalya", Madrid: "İspanya", Warsaw: "Polonya", Prague: "Çekya", Budapest: "Macaristan", Bucharest: "Romanya",
+    Moscow: "Rusya", Kiev: "Ukrayna", Kyiv: "Ukrayna", Tbilisi: "Gürcistan", Dubai: "BAE", Riyadh: "Suudi Arabistan",
+    New_York: "ABD", Chicago: "ABD", Denver: "ABD", Los_Angeles: "ABD", Toronto: "Kanada", Sydney: "Avustralya" };
+  const ulke = (() => { const sehir = saatDilimi.split("/").pop(); return (ULKE[sehir] || "") + (saatDilimi ? " (" + saatDilimi + ")" : ""); })();
+  const cihaz = (() => {
+    const u = navigator.userAgent;
+    let c = /iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : /Mac OS X/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "Diğer";
+    const uyg = /TikTok|musical_ly|BytedanceWebview/i.test(u) ? " · TikTok içinden" : /Instagram/i.test(u) ? " · Instagram içinden" : /FBAN|FBAV/i.test(u) ? " · Facebook içinden" : "";
+    return c + uyg;
+  })();
+  const saat = new Date(giris).toLocaleString("tr-TR", { timeZone: "Europe/Stockholm", dateStyle: "short", timeStyle: "short" });
+
+  const kacir = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  function gonder(veri) {
+    if (ben || !AYAR.bildirimAdresi) return;
+    veri.html = veri.metin.split("\n").map(kacir).join("<br>");
+    const govde = new URLSearchParams(veri);
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon(AYAR.bildirimAdresi, govde)) return;
+    } catch (e) {}
+    try { fetch(AYAR.bildirimAdresi, { method: "POST", body: govde, mode: "no-cors", keepalive: true }); } catch (e) {}
+  }
+  function umami(olay, veri) {
+    if (ben || !window.umami) return;
+    try { window.umami.track(olay, veri); } catch (e) {}
+  }
+  const ortak = () => ({ saat, kaynak, ulke, cihaz, dil: navigator.language || "", ziyaret_no: String(ziyaretNo),
+    ziyaretci: ziyaretNo > 1 ? ziyaretNo + ". gelişi" : "İlk kez geliyor" });
+
+  function geldi() {
+    const o = ortak();
+    gonder({ ...o, olay: "geldi",
+      baslik: "Siteye biri geldi: " + o.kaynak + (ulke ? ", " + ulke.split(" (")[0] : ""),
+      metin: ["Saat: " + o.saat, "Nereden geldi: " + o.kaynak, "Konum (saat dilimine göre): " + (o.ulke || "bilinmiyor"),
+              "Cihaz: " + o.cihaz, "Dil: " + o.dil, "Ziyaret: " + o.ziyaretci].join("\n") });
+  }
+  function ozet() {
+    const sure = Math.round((Date.now() - giris) / 1000);
+    const dinledi = Object.entries(dinlenen).map(([a, s]) => a + " (" + sureYaz(s) + ")");
+    const durum = sure + "|" + dinledi.join() + "|" + gidilen.join();
+    if (ozetSayisi >= 2 || durum === sonOzet || sure < 3) return;
+    ozetSayisi++; sonOzet = durum;
+    const o = ortak();
+    gonder({ ...o, olay: "ozet", kalis: sureYaz(sure), dinledigi: dinledi.join(", "), gittigi: gidilen.join(", "),
+      baslik: "Ziyaret özeti: " + sureYaz(sure) + " kaldı" + (gidilen.length ? ", gittiği yer: " + gidilen[0].split(" (")[0] : ""),
+      metin: ["Kaldığı süre: " + sureYaz(sure),
+              "Dinlediği şarkılar: " + (dinledi.join(", ") || "yok"),
+              "Gittiği hesaplar: " + (gidilen.join(", ") || "yok"),
+              "Nereden geldi: " + o.kaynak, "Konum (saat dilimine göre): " + (o.ulke || "bilinmiyor"),
+              "Cihaz: " + o.cihaz, "Geliş saati: " + o.saat, "Ziyaret: " + o.ziyaretci].join("\n") });
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") ozet(); });
+  addEventListener("pagehide", ozet);
+
+  return {
+    baslat() {
+      geldi();
+      if (AYAR.umamiKimlik && !ben) {
+        const s = document.createElement("script");
+        s.defer = true; s.src = "https://cloud.umami.is/script.js"; s.dataset.websiteId = AYAR.umamiKimlik;
+        document.head.appendChild(s);
+      }
+    },
+    dinledi(ad, sn) { dinlenen[ad] = Math.max(dinlenen[ad] || 0, Math.round(sn)); },
+    onizleme(olay, ad) { umami(olay, { sarki: ad }); },
+    gitti(platform, nereden) {
+      gidilen.push(PLATFORM_ADI[platform] + " (" + nereden + ")");
+      umami("platforma-gitti", { platform: PLATFORM_ADI[platform], nereden });
+    }
+  };
+})();
+
+/* ---------------- Sayfa ---------------- */
+const hesapNav = $("#hesaplar");
+for (const p of ["spotify", "youtubeMuzik", "youtube", "tiktok", "instagram"]) {
+  const url = AYAR.hesaplar[p];
+  if (!url) continue;
+  const a = document.createElement("a");
+  a.href = url; a.target = "_blank"; a.rel = "noopener"; a.innerHTML = SIMGE[p];
+  a.setAttribute("aria-label", PLATFORM_ADI[p]);
+  a.addEventListener("click", () => Ziyaret.gitti(p, "ana sayfa"));
+  hesapNav.appendChild(a);
+}
+
+const liste = $("#liste");
+SARKILAR.forEach((s, i) => {
+  const li = document.createElement("li");
+  li.innerHTML = '<button class="sarki" type="button">' +
+    '<img src="medya/kapak/' + s.id + '.jpg" alt="" loading="lazy" width="48" height="64">' +
+    '<span class="baslik"></span><span class="ikon">' + SIMGE.oynat + '</span><i class="izi"></i></button>';
+  li.querySelector(".baslik").textContent = s.ad;
+  li.querySelector("button").addEventListener("click", () => cal(i));
+  liste.appendChild(li);
+});
+
+/* ---------------- Çalar ---------------- */
+const calar = $("#calar"), tuval = $("#tuval"), ses = new Audio();
+ses.preload = "none";
+let sira = -1, sinir = AYAR.onizlemeSn, bitti = false, sonOdak = null;
+
+function oynatSimgesi() {
+  const calıyor = !ses.paused;
+  $("#oynat").innerHTML = calıyor ? SIMGE.durdur : SIMGE.oynat;
+  $("#oynat").setAttribute("aria-label", calıyor ? "Duraklat" : "Oynat");
+}
+function platformlariDoldur(s) {
+  const kutu = $("#platformlar");
+  kutu.innerHTML = "";
+  for (const p of ["spotify", "youtubeMuzik", "youtube"]) {
+    const a = document.createElement("a");
+    a.href = sarkiBaglantisi(s, p); a.target = "_blank"; a.rel = "noopener";
+    const kisa = p === "youtubeMuzik" ? "YT Music" : PLATFORM_ADI[p];
+    a.innerHTML = SIMGE[p] + '<span class="kisa">' + kisa + '</span><span class="uzun">' + PLATFORM_ADI[p] + "</span>";
+    a.addEventListener("click", () => Ziyaret.gitti(p, s.ad));
+    kutu.appendChild(a);
+  }
+}
+function cal(i) {
+  if (sira < 0) sonOdak = document.activeElement;
+  sira = (i + SARKILAR.length) % SARKILAR.length;
+  const s = SARKILAR[sira];
+  bitti = false;
+  calar.classList.remove("bitti");
+  $("#devam-yazi").textContent = "Tamamını dinle";
+  $("#calar-baslik").textContent = s.ad;
+  platformlariDoldur(s);
+  document.querySelectorAll(".sarki").forEach((b, k) => b.setAttribute("aria-current", k === sira ? "true" : "false"));
+
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  tuval.poster = "medya/kapak/" + s.id + ".jpg";
+  tuval.src = reduce ? "" : "medya/video/" + s.id + ".mp4";
+  if (!reduce) tuval.play().catch(() => {});
+
+  ses.src = s.ses || "medya/ses/" + s.id + ".m4a";
+  ses.currentTime = 0;
+  ses.play().then(oynatSimgesi).catch(oynatSimgesi);
+  Ziyaret.onizleme("onizleme-basladi", s.ad);
+
+  if (!calar.classList.contains("acik")) {
+    calar.hidden = false;
+    calar.classList.add("acik");
+    document.body.style.overflow = "hidden";
+    $("#kapat").focus();
+  }
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: s.ad, artist: "HasanCa",
+      artwork: [{ src: new URL("medya/kapak/" + s.id + ".jpg", location.href).href, sizes: "360x640", type: "image/jpeg" }] });
+    navigator.mediaSession.setActionHandler("nexttrack", () => cal(sira + 1));
+    navigator.mediaSession.setActionHandler("previoustrack", () => cal(sira - 1));
+  }
+  guncelle();
+}
+function baslangic() { return SARKILAR[sira].baslangic || 0; }
+function toplamSure() {
+  const kalan = isFinite(ses.duration) ? ses.duration - baslangic() : sinir;
+  return Math.min(sinir, kalan);
+}
+function guncelle() {
+  if (sira < 0) return;
+  const gecen = Math.max(0, ses.currentTime - baslangic()), toplam = toplamSure();
+  $("#ilerleme").style.width = Math.min(100, (gecen / toplam) * 100) + "%";
+  $("#gecen").textContent = sureYaz(gecen);
+  $("#toplam").textContent = sureYaz(toplam);
+  const iz = document.querySelectorAll(".sarki .izi")[sira];
+  if (iz) iz.style.transform = "scaleX(" + Math.min(1, gecen / toplam) + ")";
+  Ziyaret.dinledi(SARKILAR[sira].ad, gecen);
+  if (!bitti && gecen >= toplam - 0.05 && ses.currentTime > 0) onizlemeBitti();
+}
+function onizlemeBitti() {
+  if (bitti) return;
+  bitti = true;
+  ses.pause();
+  oynatSimgesi();
+  calar.classList.add("bitti");
+  $("#devam-yazi").textContent = "Devamını nerede dinlemek istersin?";
+  Ziyaret.onizleme("onizleme-bitti", SARKILAR[sira].ad);
+}
+function kapat() {
+  ses.pause();
+  tuval.pause();
+  calar.classList.remove("acik", "bitti");
+  calar.hidden = true;
+  document.body.style.overflow = "";
+  if (sonOdak) sonOdak.focus();
+  sira = -1;
+  document.querySelectorAll(".sarki").forEach((b) => b.setAttribute("aria-current", "false"));
+}
+
+ses.addEventListener("loadedmetadata", () => { if (baslangic()) ses.currentTime = baslangic(); guncelle(); });
+ses.addEventListener("timeupdate", guncelle);
+ses.addEventListener("ended", onizlemeBitti);
+ses.addEventListener("play", oynatSimgesi);
+ses.addEventListener("pause", oynatSimgesi);
+
+$("#oynat").addEventListener("click", () => { if (ses.paused) ses.play().catch(() => {}); else ses.pause(); });
+$("#onceki").addEventListener("click", () => cal(sira - 1));
+$("#sonraki").addEventListener("click", () => cal(sira + 1));
+$("#sonra").addEventListener("click", () => cal(sira + 1));
+$("#kapat").addEventListener("click", kapat);
+document.addEventListener("keydown", (e) => {
+  if (calar.hidden) return;
+  if (e.key === "Escape") kapat();
+  if (e.key === " " && e.target === document.body) { e.preventDefault(); $("#oynat").click(); }
+});
+$("#basla").addEventListener("click", () => {
+  const i = SARKILAR.findIndex((s) => s.id === AYAR.oneCikan);
+  cal(i < 0 ? 0 : i);
+});
+
+Ziyaret.baslat();
+</script>
+</body>
+</html>
