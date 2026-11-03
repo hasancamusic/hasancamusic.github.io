@@ -312,6 +312,41 @@ const Ziyaret = (() => {
     Moscow: "Rusya", Kiev: "Ukrayna", Kyiv: "Ukrayna", Tbilisi: "Gürcistan", Dubai: "BAE", Riyadh: "Suudi Arabistan",
     New_York: "ABD", Chicago: "ABD", Denver: "ABD", Los_Angeles: "ABD", Toronto: "Kanada", Sydney: "Avustralya" };
   const ulke = (() => { const sehir = saatDilimi.split("/").pop(); return (ULKE[sehir] || "") + (saatDilimi ? " (" + saatDilimi + ")" : ""); })();
+
+  /* IP adresine göre yaklaşık konum (şehir, ülke). IP saklanmaz, e-postaya yazılmaz.
+     Ziyaretçi VPN kullanıyorsa VPN'in konumu görünür. */
+  let konumIp = "";
+  const konumHazir = (async () => {
+    if (ben || !AYAR.bildirimAdresi) return "";
+    const zamanAsimi = (ms) => new Promise((r) => setTimeout(() => r(null), ms));
+    const ulkeAdi = (kod, yedek) => {
+      try { return (kod && new Intl.DisplayNames(["tr"], { type: "region" }).of(kod.toUpperCase())) || yedek || ""; }
+      catch (e) { return yedek || ""; }
+    };
+    const kaynaklar = [
+      async () => { const d = await (await fetch("https://get.geojs.io/v1/ip/geo.json")).json();
+        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country }; },
+      async () => { const d = await (await fetch("https://ipapi.co/json/")).json();
+        return { sehir: d.city, bolge: d.region, kod: d.country_code, ulke: d.country_name }; }
+    ];
+    for (const k of kaynaklar) {
+      try {
+        const d = await Promise.race([k(), zamanAsimi(2500)]);
+        if (d && (d.kod || d.ulke)) {
+          const parca = [d.sehir];
+          const sade = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ı/g, "i");
+          if (d.bolge && !(d.sehir && sade(d.bolge).includes(sade(d.sehir)))) parca.push(d.bolge);
+          parca.push(ulkeAdi(d.kod, d.ulke));
+          konumIp = parca.filter(Boolean).join(", ");
+          return konumIp;
+        }
+      } catch (e) {}
+    }
+    return "";
+  })();
+  const kisaKonum = () => konumIp ? konumIp.split(", ").filter((_, i, a) => i === 0 || i === a.length - 1).join(", ") : ulke.split(" (")[0];
+  const konumSatiri = () => konumIp ? "Konum: " + konumIp + " (saat dilimi: " + (saatDilimi || "?") + ")"
+                                    : "Konum (saat dilimine göre): " + (ulke || "bilinmiyor");
   const cihaz = (() => {
     const u = navigator.userAgent;
     let c = /iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : /Mac OS X/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "Diğer";
@@ -337,11 +372,13 @@ const Ziyaret = (() => {
   const ortak = () => ({ saat, kaynak, ulke, cihaz, dil: navigator.language || "", ziyaret_no: String(ziyaretNo),
     ziyaretci: ziyaretNo > 1 ? ziyaretNo + ". gelişi" : "İlk kez geliyor" });
 
-  function geldi() {
+  async function geldi() {
+    await konumHazir;
     const o = ortak();
-    gonder({ ...o, olay: "geldi",
-      baslik: "Siteye biri geldi: " + o.kaynak + (ulke ? ", " + ulke.split(" (")[0] : ""),
-      metin: ["Saat: " + o.saat, "Nereden geldi: " + o.kaynak, "Konum (saat dilimine göre): " + (o.ulke || "bilinmiyor"),
+    const kk = kisaKonum();
+    gonder({ ...o, olay: "geldi", konum: konumIp,
+      baslik: "Siteye biri geldi: " + o.kaynak + (kk ? ", " + kk : ""),
+      metin: ["Saat: " + o.saat, "Nereden geldi: " + o.kaynak, konumSatiri(),
               "Cihaz: " + o.cihaz, "Dil: " + o.dil, "Ziyaret: " + o.ziyaretci].join("\n") });
   }
   function ozet() {
@@ -351,12 +388,12 @@ const Ziyaret = (() => {
     if (ozetSayisi >= 2 || durum === sonOzet || sure < 3) return;
     ozetSayisi++; sonOzet = durum;
     const o = ortak();
-    gonder({ ...o, olay: "ozet", kalis: sureYaz(sure), dinledigi: dinledi.join(", "), gittigi: gidilen.join(", "),
+    gonder({ ...o, olay: "ozet", konum: konumIp, kalis: sureYaz(sure), dinledigi: dinledi.join(", "), gittigi: gidilen.join(", "),
       baslik: "Ziyaret özeti: " + sureYaz(sure) + " kaldı" + (gidilen.length ? ", gittiği yer: " + gidilen[0].split(" (")[0] : ""),
       metin: ["Kaldığı süre: " + sureYaz(sure),
               "Dinlediği şarkılar: " + (dinledi.join(", ") || "yok"),
               "Gittiği hesaplar: " + (gidilen.join(", ") || "yok"),
-              "Nereden geldi: " + o.kaynak, "Konum (saat dilimine göre): " + (o.ulke || "bilinmiyor"),
+              "Nereden geldi: " + o.kaynak, konumSatiri(),
               "Cihaz: " + o.cihaz, "Geliş saati: " + o.saat, "Ziyaret: " + o.ziyaretci].join("\n") });
   }
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") ozet(); });
