@@ -379,8 +379,12 @@ const Ziyaret = (() => {
   const ortak = () => ({ saat, kaynak, ulke, cihaz, dil: navigator.language || "", ziyaret_no: String(ziyaretNo),
     ziyaretci: ziyaretNo > 1 ? ziyaretNo + ". gelişi" : "İlk kez geliyor" });
 
-  async function geldi() {
-    await konumHazir;
+  let geldiGitti = false;
+  async function geldi(hemen) {
+    // Konumu en fazla 1,5 sn bekle; kısa ziyaretlerde (hemen) hiç bekleme
+    if (!hemen) await Promise.race([konumHazir, new Promise((r) => setTimeout(r, 1500))]);
+    if (geldiGitti) return;
+    geldiGitti = true;
     const o = ortak();
     const kk = kisaKonum();
     gonder({ ...o, olay: "geldi", konum: konumIp,
@@ -389,6 +393,7 @@ const Ziyaret = (() => {
               "Cihaz: " + o.cihaz, "Dil: " + o.dil, "Ziyaret: " + o.ziyaretci].join("\n") });
   }
   function ozet() {
+    if (!geldiGitti) geldi(true); // sayfa hemen kapandıysa geliş bildirimi de kaybolmasın
     const sure = Math.round((Date.now() - giris) / 1000);
     const dinledi = Object.entries(dinlenen).map(([a, s]) => a + " (" + sureYaz(s) + ")");
     const durum = sure + "|" + dinledi.join() + "|" + gidilen.join();
