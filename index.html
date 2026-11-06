@@ -216,6 +216,8 @@ const AYAR = {
   umamiKimlik: "",
   // Instagram, TikTok, Google gibi şirketlerin bağlantı kontrol robotları için e-posta gönderilsin mi
   robotlariBildir: false,
+  // Sitede en az bu kadar kalan ziyaretçiler bildirilir (saniye). Daha kısa kalanlar için e-posta gelmez.
+  enAzKalisSn: 5,
   hesaplar: {
     spotify: "https://open.spotify.com/artist/3hIlq9jAT2SYZZCNUpkia5",
     youtube: "https://www.youtube.com/@hasancaofficial",
@@ -381,9 +383,9 @@ const Ziyaret = (() => {
 
   let geldiGitti = false;
   async function geldi(hemen) {
-    // Konumu en fazla 1,5 sn bekle; kısa ziyaretlerde (hemen) hiç bekleme
+    // Konumu en fazla 1,5 sn bekle; sayfa kapanırken (hemen) bekleme
     if (!hemen) await Promise.race([konumHazir, new Promise((r) => setTimeout(r, 1500))]);
-    if (geldiGitti) return;
+    if (geldiGitti || (Date.now() - giris) / 1000 < AYAR.enAzKalisSn - 0.2) return;
     geldiGitti = true;
     const o = ortak();
     const kk = kisaKonum();
@@ -393,11 +395,12 @@ const Ziyaret = (() => {
               "Cihaz: " + o.cihaz, "Dil: " + o.dil, "Ziyaret: " + o.ziyaretci].join("\n") });
   }
   function ozet() {
-    if (!geldiGitti) geldi(true); // sayfa hemen kapandıysa geliş bildirimi de kaybolmasın
+    if ((Date.now() - giris) / 1000 < AYAR.enAzKalisSn) return;   // kısa ziyaret: hiç bildirim yok
     const sure = Math.round((Date.now() - giris) / 1000);
+    if (!geldiGitti) geldi(true);                   // geliş bildirimi henüz gitmediyse önce o
     const dinledi = Object.entries(dinlenen).map(([a, s]) => a + " (" + sureYaz(s) + ")");
     const durum = sure + "|" + dinledi.join() + "|" + gidilen.join();
-    if (ozetSayisi >= 2 || durum === sonOzet || sure < 3) return;
+    if (ozetSayisi >= 2 || durum === sonOzet) return;
     ozetSayisi++; sonOzet = durum;
     const o = ortak();
     gonder({ ...o, olay: "ozet", konum: konumIp, kalis: sureYaz(sure), dinledigi: dinledi.join(", "), gittigi: gidilen.join(", "),
@@ -413,7 +416,8 @@ const Ziyaret = (() => {
 
   return {
     baslat() {
-      geldi();
+      // Geliş bildirimi ancak ziyaretçi en az enAzKalisSn saniye kalınca gider
+      setTimeout(() => { if (document.visibilityState === "visible") geldi(); }, AYAR.enAzKalisSn * 1000);
       if (AYAR.umamiKimlik && !ben) {
         const s = document.createElement("script");
         s.defer = true; s.src = "https://cloud.umami.is/script.js"; s.dataset.websiteId = AYAR.umamiKimlik;
